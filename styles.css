@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fffef6;
+    color: #333;
+  }
+  
+  header {
+    background-color: #ffde59;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
+  
+  header p {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+  }
+  
+  section {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .story p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .photos .photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .photo-grid img {
+    width: 100%;
+    max-width: 380px;
+    height: 280px; /* Set a consistent height */
+    object-fit: cover; /* Crop instead of stretch */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .donate {
+    text-align: center;
+  }
+  
+  .donate-button {
+    display: inline-block;
+    background-color: #ffde59;
+    color: #000;
+    padding: 1rem 2rem;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .donate-button:hover {
+    background-color: #ffe985;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #f6f6f6;
+    font-size: 0.9rem;
+  }
+  .video {
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: auto;
+  }
+  
+  .video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+  }
+  
+  
