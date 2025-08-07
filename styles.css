@@ -1,288 +1,278 @@
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f5f5dc; /* Cream color */
-    color: #333;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #3B7080; /* Cream color */
+  color: #333;
 }
 
 .text-container {
-    background-color: #ffffff; /* Clean white background */
-    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-    padding: 1.8rem;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    border: 1px solid rgba(255, 222, 89, 0.2);
-    margin: 0 1rem 2rem 1rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #EDEDBF; /* Light cyan for better contrast */
+  background: linear-gradient(145deg, #EDEDBF 0%, #EDEDBF 100%);
+  padding: 1.8rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255, 222, 89, 0.2);
+  margin: 0 auto 2rem; /* Center the container */
+  max-width: 800px; /* Set a consistent max width */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+  color: #333; /* Ensure text is readable */
 }
 
 .text-container:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
-  
-  header {
-    background-color: #ffde59;
-    padding: 2rem;
-    text-align: center;
-  }
-  
-  header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-  }
-  
-  header p {
-    margin-top: 0.5rem;
-    font-size: 1.2rem;
-  }
-  
-  section {
-    padding: 1rem;
-    max-width: 900px;
-    margin: 0 auto 1rem;
-  }
-  
-  /* Mobile responsive design for screens under 400px */
-  @media screen and (max-width: 399px) {
-    section {
-      padding: 0.75rem;
-      margin: 0 0.5rem 1rem;
-    }
-    
-    .text-container {
-      margin: 0 0.5rem 1.5rem;
-      padding: 1rem;
-    }
-    
-    header {
-      padding: 1.5rem 0.5rem;
-    }
-    
-    .nav-button {
-      margin: 0.25rem 0.1rem;
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-    }
-    
-    .photo-grid img {
-      max-width: 100%;
-      height: 200px;
-    }
-    
-    .donate-button {
-      padding: 0.8rem 1.5rem;
-      font-size: 1.1rem;
-    }
-    
-    .photos .photo-grid {
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    
-    .video {
-      padding: 1rem 0.5rem;
-    }
-    
-    video {
-      width: calc(100% - 1rem);
-      max-width: calc(100% - 1rem);
-    }
-    
-    header h1 {
-      font-size: 2rem;
-    }
-    
-    header p {
-      font-size: 1rem;
-    }
-  }
 
-  button {
-    background-color: #ffde59;
-    border: none;
-    border-radius: 12px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button a {
-    text-decoration: none;
-    color: #000;
-    font-weight: bold;
-  }
-  
-  button:hover {
-    background-color: #ffe985;
-  }
-  
-  .nav-button {
-    display: inline-block;
-    background-color: #ffde59;
-    border: none;
-    border-radius: 12px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    text-decoration: none;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 0 0.25rem;
-  }
-  
-  .nav-button:hover {
-    background-color: #ffe985;
-  }
-  
-  .story p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-  
-  .photos .photo-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  
-  .photo-grid img {
-    width: 100%;
-    max-width: 380px;
-    height: 280px; /* Set a consistent height */
-    object-fit: cover; /* Crop instead of stretch */
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  .donate {
-    text-align: center;
-  }
-  
-  .donate-button {
-    display: inline-block;
-    background-color: #ffde59;
-    color: #000;
-    padding: 1rem 2rem;
-    border-radius: 999px;
-    font-size: 1.2rem;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  .donate-button:hover {
-    background-color: #ffe985;
-  }
-  
-  footer {
-    text-align: center;
-    padding: 2rem 1rem;
-    background: linear-gradient(135deg, #ffde59 0%, #ffd93d 100%);
-    font-size: 0.95rem;
-    color: #333;
-    margin-top: 3rem;
-  }
-  
-  .footer-content {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  
-  .social-links {
-    margin: 1.5rem 0;
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-  
-  .social-link {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  
-  .social-link:hover {
-    background-color: #ffffff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  
+header {
+  background-color: #ffde59;
+  padding: 2rem;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+header p {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
+
+section {
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto 1rem; /* Center the section */
+}
+
+button {
+  background-color: #ffde59;
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #ffe985;
+}
+
+.nav-button {
+  display: inline-block;
+  background-color: #ffde59;
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 0.25rem;
+}
+
+.nav-button:hover {
+  background-color: #ffe985;
+}
+
+.story p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.photos .photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.photo-grid img {
+  width: 100%;
+  max-width: 380px;
+  height: 280px; /* Set a consistent height */
+  object-fit: cover; /* Crop instead of stretch */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.donate {
+  text-align: center;
+}
+
+.donate-button {
+  display: inline-block;
+  background-color: #ffde59;
+  color: #000;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  font-size: 1.2rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.donate-button:hover {
+  background-color: #ffe985;
+}
+
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #ffde59 0%, #ffd93d 100%);
+  font-size: 0.95rem;
+  color: #333;
+  margin-top: 3rem;
+}
+
+.footer-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.social-links {
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.social-link:hover {
+  background-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
   .social-icon {
     margin-right: 0.5rem;
     font-size: 1.2em;
   }
   
-  /* Contact page specific styling */
-  .contact-details {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  .social-icon img {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
   }
   
-  .contact-item {
-    text-align: center;
+  .social-link .social-icon img {
+    transition: transform 0.2s ease;
   }
   
-  .contact-item h3 {
-    margin-bottom: 0.5rem;
-    color: #ffb347;
+  .social-link:hover .social-icon img {
+    transform: scale(1.1);
+  }
+
+/* Mobile responsive design for screens under 400px */
+@media screen and (max-width: 399px) {
+  section {
+      padding: 0.75rem;
+      margin: 0 0.5rem 1rem;
   }
   
-  .contact-item a {
-    color: #333;
-    font-weight: bold;
-    text-decoration: none;
+  .text-container {
+      margin: 0 0.5rem 1.5rem;
+      padding: 1rem;
   }
   
-  .contact-item a:hover {
-    color: #ffb347;
-    text-decoration: underline;
+  header {
+      padding: 1.5rem 0.5rem;
   }
   
-  /* Mobile responsive updates */
-  @media screen and (max-width: 768px) {
-    .social-links {
-      gap: 1rem;
-    }
-    
-    .social-link {
+  .nav-button {
+      margin: 0.25rem 0.1rem;
       padding: 0.4rem 0.8rem;
       font-size: 0.9rem;
-    }
   }
+  
+  .photo-grid img {
+      max-width: 100%;
+      height: 200px;
+  }
+  
+  .donate-button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1.1rem;
+  }
+  
+  .photos .photo-grid {
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+  }
+  
   .video {
-    padding: 2rem;
-    text-align: center;
+      padding: 1rem 0.5rem;
   }
   
-  .video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-    margin: auto;
+  video {
+      width: calc(100% - 1rem);
+      max-width: calc(100% - 1rem);
   }
   
-  .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
+  header h1 {
+      font-size: 2rem;
   }
   
+  header p {
+      font-size: 1rem;
+  }
+}
+
+/* Mobile responsive updates */
+@media screen and (max-width: 768px) {
+  .social-links {
+      gap: 1rem;
+  }
   
+  .social-link {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+  }
+}
+
+.video {
+  padding: 2rem;
+  text-align: center;
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  margin: auto;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
