@@ -28,6 +28,37 @@ header {
   background-color: #ffde59;
   padding: 2rem;
   text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.team-logo {
+  width: 80px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+
+.team-logo:hover {
+  transform: scale(1.05);
+}
+
+.header-text {
+  text-align: center;
 }
 
 header h1 {
@@ -38,6 +69,14 @@ header h1 {
 header p {
   margin-top: 0.5rem;
   font-size: 1.2rem;
+}
+
+.header-nav {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
 section {
@@ -201,6 +240,18 @@ footer {
   
   header {
       padding: 1.5rem 0.5rem;
+      flex-direction: column;
+      gap: 1rem;
+  }
+  
+  .header-content {
+      flex-direction: column;
+      gap: 1rem;
+  }
+  
+  .team-logo {
+      width: 60px;
+      height: 45px;
   }
   
   .nav-button {
