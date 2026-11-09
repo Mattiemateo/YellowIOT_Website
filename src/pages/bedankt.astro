@@ -1,0 +1,150 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { site, crowdfunding } from '../data/site';
+import fta from '../assets/team/fta.jpg';
+
+const pct = Math.round((crowdfunding.raised / crowdfunding.goal) * 100);
+
+const bought = [
+  '8 lineaire sliders',
+  'Een extra motor om de lift sneller te maken',
+  'Sterk draad om de liften omhoog te hijsen',
+  'Verlengkabels voor de elektronica',
+  'Schroefjes en andere kleine onderdelen',
+];
+
+const days = [
+  {
+    t: 'De voorbereiding',
+    p: 'We waren ontzettend blij toen we hoorden dat we naar het FTC Premier Event mochten. Direct gingen we aan de slag om de robot klaar te maken voor de wedstrijd. Al om 6 uur ’s ochtends gingen we op reis naar Eindhoven. Om niet steeds heen en weer te hoeven rijden, hebben we een huisje in de buurt gehuurd.',
+  },
+  {
+    t: 'Dag 1: internationale ontmoetingen',
+    p: 'De eerste dag was geweldig: er waren zoveel mooie stands, met mensen uit wel 25+ landen. Het was leuk om al die mensen te ontmoeten.',
+  },
+  {
+    t: 'Dag 2: robotdokters en wedstrijden',
+    p: 'De tweede dag ging onze robot kapot, maar we hadden al geleerd dat om hulp vragen juist heel goed is! Met hulp van de FTA, de robotdokters, werkte de robot een stuk beter. Zo konden we nog een paar wedstrijden spelen, en dat was echt super gaaf.',
+  },
+  {
+    t: 'Dag 3: laatste wedstrijd en inspiratie',
+    p: 'Op de derde dag speelden we nog één wedstrijd en bouwden we onze stand af. Daarna keken we naar de laatste wedstrijden van de allerbeste teams. Super cool om al die fantastische robots op het veld te zien. We hebben veel geleerd en gaan vol zin het volgende seizoen in.',
+  },
+];
+---
+
+<Base
+  title="Bedankt! Ons verhaal van het FTC Premier Event"
+  description={`Dankzij ${crowdfunding.supporters} supporters haalde ${site.name} ${pct}% van het crowdfundingdoel en ging het team naar het FTC Premier Event in Eindhoven. Lees het verhaal.`}
+>
+  <article>
+    <header class="wrap hero">
+      <div class="stack" style="--stack: 20px">
+        <p class="tag">&gt; cat ./verhalen/premier_event.md</p>
+        <h1 class="px block h1">Bedankt!</h1>
+        <p class="lead">
+          Beste donateurs: namens heel {site.name} heel erg bedankt voor jullie donatie! Zonder jullie hadden we het nooit gered om naar het FTC Premier Event te gaan. Elke bijdrage, groot of klein, helpt ons verder in de wereld van robotica en technologie. Dankzij jullie kunnen we blijven leren, bouwen en groeien als team.
+        </p>
+      </div>
+      <div class="card shadow score">
+        <p class="px big">{pct}%</p>
+        <p>
+          van het doel van €{crowdfunding.goal}: <strong>€{crowdfunding.raised}</strong> opgehaald dankzij {crowdfunding.supporters} supporters. En dat allemaal binnen één avond! Zo konden we meteen bestellen en verder bouwen aan onze robot.
+        </p>
+      </div>
+    </header>
+
+    <section class="band">
+      <div class="wrap section split">
+        <div class="stack">
+          <h2 class="px h2">Waar ging het geld naartoe?</h2>
+          <p class="muted">Omdat we zoveel extra geld kregen, hebben we de plannen aangepast: we konden een langere en sterkere lift maken. Dit hebben we gekocht:</p>
+          <ul class="list-reset bought">
+            {bought.map((b) => <li><span class="mono y" aria-hidden="true">▶</span>{b}</li>)}
+          </ul>
+        </div>
+        <figure class="card">
+          <Image src={fta} alt="Het team met de robot bij het FTC Premier Event in Eindhoven" widths={[400, 800]} sizes="(min-width: 900px) 560px, 100vw" class="photo" />
+          <figcaption>FTC Premier Event · Eindhoven</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="wrap section">
+      <h2 class="px h2" style="margin-bottom: 28px">Hoe het ging</h2>
+      <ol class="list-reset days">
+        {
+          days.map((d, i) => (
+            <li class="card">
+              <span class="mono y">0{i}</span>
+              <h3 class="px">{d.t}</h3>
+              <p>{d.p}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="lead outro">Een onvergetelijke ervaring die ons team sterker heeft gemaakt!</p>
+      <div class="row">
+        <a href="/sponsors/" class="btn">Help ons naar het volgende event →</a>
+        <a href="/#robot" class="btn ghost">Bekijk onze nieuwe robot</a>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .y {
+    color: var(--yellow);
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    align-items: end;
+    padding-block: clamp(40px, 6vw, 64px) clamp(48px, 6vw, 72px);
+  }
+  @media (min-width: 960px) {
+    .hero {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    }
+  }
+  .score {
+    padding: 28px;
+  }
+  .big {
+    font-size: 64px;
+    line-height: 1;
+    color: var(--yellow);
+    margin-bottom: 12px;
+  }
+  .bought li {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 2px solid var(--line);
+  }
+  .card :global(.photo) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .days {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+  .days .card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .days h3 {
+    font-size: 24px;
+    color: var(--white);
+  }
+  .outro {
+    margin: 40px 0 24px;
+  }
+</style>

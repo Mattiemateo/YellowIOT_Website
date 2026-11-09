@@ -1,0 +1,160 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.jpg';
+import { nav, site } from '../data/site';
+
+interface Props {
+  current?: string;
+  /** Knop rechtsboven; op de sponsorpagina wordt dit "Contact". */
+  cta?: { href: string; label: string; short: string };
+}
+
+const { current, cta = { href: '/sponsors/', label: 'Word sponsor', short: 'Sponsor' } } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a href="/" class="brand" data-logo aria-label={`${site.name} — home`}>
+      <Image src={logo} alt="" width={72} height={54} loading="eager" class="brand-logo" />
+      <span class="mono brandtxt">FTC TEAM<br /><b>#{site.teamNumber}</b></span>
+    </a>
+
+    <nav class="dnav mono" aria-label="Hoofdmenu">
+      {
+        nav.map((item) => (
+          <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+      <a href={cta.href} class="btn small">{cta.label}</a>
+    </nav>
+
+    <div class="mnav">
+      <a href={cta.href} class="btn small">{cta.short}</a>
+      <details class="menu">
+        <summary>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+          MENU
+        </summary>
+        <nav class="mono" aria-label="Hoofdmenu (mobiel)">
+          {
+            nav.map((item) => (
+              <a href={item.href} aria-current={current === item.key ? 'page' : undefined}>
+                {item.label}
+              </a>
+            ))
+          }
+          <a href="/sponsors/" aria-current={current === 'sponsors' ? 'page' : undefined}>Word sponsor</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 20;
+    border-bottom: 2px solid var(--line);
+    background: rgba(11, 11, 12, 0.92);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    padding-block: 12px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .brand-logo {
+    width: 72px;
+    height: 54px;
+    object-fit: cover;
+  }
+  .brandtxt {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--muted);
+  }
+  .brandtxt b {
+    color: var(--paper);
+  }
+  .dnav {
+    display: none;
+    align-items: center;
+    gap: 4px 22px;
+    font-size: 15px;
+  }
+  .dnav a:not(.btn),
+  .menu nav a {
+    color: var(--paper);
+    text-decoration: none;
+    padding: 12px 4px;
+  }
+  .dnav a:not(.btn):hover,
+  .menu nav a:hover,
+  [aria-current='page'] {
+    color: var(--yellow) !important;
+  }
+  .mnav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .menu summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 2px solid var(--line-2);
+    color: var(--paper);
+    font-family: var(--f-mono);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .menu[open] summary {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+  .menu nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--ink);
+    border-bottom: 2px solid var(--yellow);
+    display: flex;
+    flex-direction: column;
+    padding: 8px var(--gutter) 16px;
+    font-size: 17px;
+  }
+  .menu nav a {
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 420px) {
+    .brandtxt {
+      display: none;
+    }
+  }
+  @media (min-width: 900px) {
+    .dnav {
+      display: flex;
+    }
+    .mnav {
+      display: none;
+    }
+  }
+</style>

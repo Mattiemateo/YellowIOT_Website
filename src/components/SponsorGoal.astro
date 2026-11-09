@@ -1,0 +1,131 @@
+---
+// Voortgangsbalk voor het seizoensdoel.
+// Waarden komen uit de Netlify-omgevingsvariabelen SPONSOR_RAISED en SPONSOR_GOAL,
+// en worden tijdens de build in de HTML gezet (geen JavaScript nodig).
+import { SPONSOR_RAISED, SPONSOR_GOAL } from 'astro:env/server';
+import { site } from '../data/site';
+
+const raised = Math.max(0, SPONSOR_RAISED);
+const goal = Math.max(1, SPONSOR_GOAL);
+// Blokjes van €100; bij een heel ander doel schaalt het blokje mee (max. 40 blokjes).
+const step = Math.max(100, Math.ceil(goal / 40 / 50) * 50);
+const blocks = Math.ceil(goal / step);
+const full = Math.min(blocks, Math.floor(raised / step));
+const done = raised >= goal;
+const pct = Math.min(100, Math.round((raised / goal) * 100));
+const eur = (n: number) => `€${n.toLocaleString('nl-NL')}`;
+---
+
+<section aria-labelledby="h-goal" class="goal">
+  <div class="wrap inner">
+    <div class="head">
+      <div class="stack" style="--stack: 8px">
+        <p class="tag">&gt; seizoensdoel_2026 — {pct}% geladen</p>
+        <h2 id="h-goal" class="px title"><span class="y">{eur(raised)}</span> van {eur(goal)} opgehaald</h2>
+      </div>
+      <p class="mono muted left">
+        {done ? <strong class="y">Doel gehaald. Dankjewel!</strong> : <>nog <strong>{eur(goal - raised)}</strong> te gaan</>}
+      </p>
+    </div>
+    <div
+      class="pbar"
+      role="progressbar"
+      aria-labelledby="h-goal"
+      aria-valuemin="0"
+      aria-valuemax={goal}
+      aria-valuenow={Math.min(raised, goal)}
+      aria-valuetext={`${eur(raised)} van ${eur(goal)}`}
+      style={`--blocks:${blocks}`}
+    >
+      {Array.from({ length: blocks }, (_, i) => <span class:list={['blk', { on: i < full, next: i === full && !done }]} />)}
+    </div>
+    <div class="foot">
+      <p class="mono muted small">1 blokje = {eur(step)}</p>
+      <div class="row" style="--row: 14px">
+        <a href="#pakketten" class="btn">Word sponsor →</a>
+        <a href={site.bunq} class="btn ghost" rel="noopener">Doneer direct <span aria-hidden="true">↗</span><span class="sr-only"> (via bunq)</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .goal {
+    border-top: 2px solid var(--line);
+    background: #0e0e10;
+  }
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-block: 40px 44px;
+  }
+  .head,
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px 32px;
+  }
+  .foot {
+    align-items: center;
+  }
+  .title {
+    font-size: clamp(28px, 3.4vw, 40px);
+    color: var(--white);
+    line-height: 1.1;
+  }
+  .y {
+    color: var(--yellow);
+  }
+  .left {
+    font-size: 15px;
+  }
+  .left strong {
+    color: var(--paper);
+  }
+  .small {
+    font-size: 13px;
+  }
+  .pbar {
+    display: grid;
+    grid-template-columns: repeat(var(--blocks), minmax(0, 1fr));
+    gap: 2px;
+    padding: 3px;
+    border: 2px solid var(--line-2);
+    background: var(--ink-2);
+    box-shadow: 4px 4px 0 var(--teal);
+  }
+  .blk {
+    height: 22px;
+    background: #1b1b1e;
+  }
+  .blk.on {
+    background: var(--yellow);
+  }
+  .blk.next {
+    background: repeating-linear-gradient(45deg, var(--line-2) 0 3px, #1b1b1e 3px 6px);
+    animation: blink 1.2s steps(2) infinite;
+  }
+  @media (min-width: 760px) {
+    .pbar {
+      gap: 3px;
+      padding: 4px;
+      box-shadow: 6px 6px 0 var(--teal);
+    }
+    .blk {
+      height: 28px;
+    }
+    .blk.on {
+      box-shadow:
+        inset -3px -3px 0 var(--yellow-dk),
+        inset 3px 3px 0 var(--yellow-lt);
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.35;
+    }
+  }
+</style>

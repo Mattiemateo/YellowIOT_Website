@@ -1,0 +1,19 @@
+{
+  "name": "yellowiot-website",
+  "private": true,
+  "type": "module",
+  "description": "Website van FTC Team Yellow IoT #25905 (www.yellowiot.nl)",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.8",
+    "sharp": "^0.35.5"
+  }
+}

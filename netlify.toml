@@ -1,0 +1,52 @@
+# Netlify-build voor www.yellowiot.nl
+#
+# Sponsorbalk bijwerken: Site configuration → Environment variables →
+#   SPONSOR_RAISED = totaal opgehaald bedrag in euro's (bijv. 600)
+#   SPONSOR_GOAL   = seizoensdoel in euro's (standaard 3500)
+# Daarna: Deploys → Trigger deploy → Deploy site.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.23.4"
+
+# Oude URL's van de vorige site
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/donate.html"
+  to = "/sponsors/"
+  status = 301
+[[redirects]]
+  from = "/contact.html"
+  to = "/#contact"
+  status = 301
+[[redirects]]
+  from = "/thank-you.html"
+  to = "/bedankt/"
+  status = 301
+[[redirects]]
+  from = "/updates.html"
+  to = "/"
+  status = 301
+[[redirects]]
+  from = "/video.mp4"
+  to = "/media/team-in-actie.mp4"
+  status = 301
+
+# Lange cache voor bestanden met een hash in de naam
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

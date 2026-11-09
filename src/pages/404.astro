@@ -1,0 +1,216 @@
+---
+import Base from '../layouts/Base.astro';
+
+const W = 15;
+const H = 9;
+---
+
+<Base title="404 — Pagina niet gevonden" description="Deze pagina bestaat niet. Speel ons robotspelletje of ga terug naar de homepage." noindex>
+  <div class="wrap game-page">
+    <div class="stack" style="--stack: 18px">
+      <p class="mono err">ERROR 404 · PAGE_NOT_FOUND</p>
+      <h1 class="px glitch title">Deze pagina is uit het veld gereden.</h1>
+      <p class="lead">Nu je hier toch bent: help onze robot <strong class="y">10 ballen</strong> te verzamelen in 30 seconden. Rijd met de pijltjestoetsen, WASD of de knoppen.</p>
+      <div class="mono status" role="status" aria-live="polite">
+        <span>SCORE <strong data-score>0</strong>/10</span>
+        <span>TIJD <strong data-time>30</strong>s</span>
+        <span>BEST <strong class="t" data-best>0</strong></span>
+      </div>
+      <div class="won" data-won hidden>
+        <p class="px">10/10. Jij kan dit.</p>
+        <p>Snel, precies en je geeft niet op. Dat is precies wat ons team zoekt.</p>
+        <a href="/doe-mee/" class="mono">./join --team yellowiot →</a>
+      </div>
+      <p class="px over" data-over hidden></p>
+      <div class="row" style="--row: 14px">
+        <a href="/" class="btn ghost">Naar home</a>
+        <a href="/#robot" class="btn ghost">Bekijk de echte robot</a>
+      </div>
+    </div>
+
+    <section aria-label="Robotgame" class="stack game" style="--stack: 18px" data-game data-w={W} data-h={H}>
+      <div class="board" aria-hidden="true" style={`--w:${W}`}>
+        {Array.from({ length: W * H }, () => <div class="c" />)}
+      </div>
+      <div class="controls">
+        <button type="button" class="btn" data-start>Start game ▶</button>
+        <div class="pad" role="group" aria-label="Besturing">
+          <span></span><button type="button" class="key" aria-label="Omhoog" data-dir="u">↑</button><span></span>
+          <button type="button" class="key" aria-label="Links" data-dir="l">←</button>
+          <button type="button" class="key" aria-label="Omlaag" data-dir="d">↓</button>
+          <button type="button" class="key" aria-label="Rechts" data-dir="r">→</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { initGame } from '../scripts/game';
+  const el = document.querySelector<HTMLElement>('[data-game]');
+  if (el) initGame(el);
+</script>
+
+<style>
+  .game-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 48px);
+    padding-block: clamp(28px, 4vw, 48px) clamp(48px, 6vw, 72px);
+  }
+  @media (min-width: 960px) {
+    .game-page {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      align-items: start;
+    }
+  }
+  .err {
+    font-size: 13px;
+    color: var(--teal-lt);
+    letter-spacing: 0.06em;
+  }
+  .title {
+    font-size: clamp(40px, 5.6vw, 72px);
+    line-height: 1;
+    color: var(--white);
+  }
+  .glitch {
+    text-shadow:
+      -3px 0 0 #59e8f0,
+      3px 0 0 var(--rust);
+  }
+  .y {
+    color: var(--yellow);
+  }
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    font-size: 15px;
+    padding: 14px 18px;
+    background: var(--panel);
+    border: 2px solid var(--line);
+  }
+  .status strong {
+    color: var(--yellow);
+    font-size: 22px;
+  }
+  .status .t {
+    color: var(--teal-lt);
+  }
+  .won {
+    padding: 18px 20px;
+    border: 2px solid var(--teal-lt);
+    background: var(--ink);
+  }
+  .won .px {
+    font-size: 26px;
+    color: var(--teal-lt);
+    margin-bottom: 6px;
+  }
+  .won p:nth-child(2) {
+    margin-bottom: 12px;
+  }
+  .won a {
+    font-weight: 700;
+  }
+  .over {
+    font-size: 26px;
+    color: var(--yellow);
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(var(--w), minmax(0, 1fr));
+    gap: 2px;
+    padding: 2px;
+    background: #1b1b1e;
+    border: 2px solid var(--line);
+    box-shadow: 5px 5px 0 var(--teal);
+  }
+  @media (min-width: 760px) {
+    .board {
+      box-shadow: 8px 8px 0 var(--teal);
+    }
+  }
+  .board :global(.c) {
+    aspect-ratio: 1;
+    background: #0e0e10;
+    position: relative;
+  }
+  .board :global(.c.wall) {
+    background: var(--yellow);
+    box-shadow:
+      inset -4px -4px 0 var(--yellow-dk),
+      inset 4px 4px 0 var(--yellow-lt);
+  }
+  .board :global(.c.wall.t) {
+    background: var(--teal);
+    box-shadow:
+      inset -4px -4px 0 #0e7a66,
+      inset 4px 4px 0 #3fd1b4;
+  }
+  .board :global(.c.ball::after) {
+    content: '';
+    position: absolute;
+    inset: 26%;
+    background: var(--yellow);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--rust);
+  }
+  .board :global(.c.bot) {
+    background: var(--paper);
+    box-shadow: inset -4px -4px 0 var(--muted);
+  }
+  .board :global(.c.bot::after) {
+    content: '';
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    background: var(--teal);
+    top: 35%;
+    left: 35%;
+  }
+  .board :global(.c.bot.r::after) {
+    left: 62%;
+  }
+  .board :global(.c.bot.l::after) {
+    left: 8%;
+  }
+  .board :global(.c.bot.u::after) {
+    top: 8%;
+  }
+  .board :global(.c.bot.d::after) {
+    top: 62%;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pad {
+    display: grid;
+    grid-template-columns: repeat(3, 52px);
+    gap: 6px;
+  }
+  .key {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    background: var(--panel);
+    color: var(--yellow);
+    border: 2px solid var(--line-2);
+    font-family: var(--f-mono);
+    font-size: 20px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .key:hover {
+    border-color: var(--yellow);
+  }
+  .key:active {
+    background: var(--yellow);
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,199 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { parts, type Part } from '../../data/parts';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return parts.map((part) => ({ params: { slug: part.slug }, props: { part } }));
+}
+
+const { part } = Astro.props as { part: Part };
+const i = parts.indexOf(part);
+const prev = parts[(i - 1 + parts.length) % parts.length];
+const next = parts[(i + 1) % parts.length];
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${site.url}/` },
+      { '@type': 'ListItem', position: 2, name: site.robot, item: `${site.url}/#robot` },
+      { '@type': 'ListItem', position: 3, name: part.name, item: `${site.url}/porcupine/${part.slug}/` },
+    ],
+  },
+];
+---
+
+<Base
+  title={`${part.name} — ${site.robot}, robot 2026`}
+  description={`${part.name} van ${site.robot}, de robot van FTC ${site.name} (#${site.teamNumber}): ${part.teaser}`}
+  current="robot"
+  jsonLd={jsonLd}
+>
+  <div class="wrap crumbs-wrap">
+    <nav aria-label="Kruimelpad" class="mono crumbs">
+      <ol class="list-reset">
+        <li><a href="/">Home</a> /</li>
+        <li><a href="/#robot">{site.robot}</a> /</li>
+        <li aria-current="page">{part.name}</li>
+      </ol>
+    </nav>
+  </div>
+
+  <section class="wrap head" aria-labelledby="h1">
+    <div class="stack" style="--stack: 18px">
+      <p class="tag">Onderdeel {pad(part.n)} / {pad(parts.length)}</p>
+      <h1 id="h1" class="px block title">{part.name}</h1>
+      <p class="lead">{part.teaser}</p>
+    </div>
+  </section>
+
+  <section class="wrap grid figs" aria-label="Foto's" style="--min: 280px">
+    {
+      part.figures.map((f, n) => (
+        <figure>
+          <Image
+            src={f.src}
+            alt={f.alt}
+            widths={[400, 800]}
+            sizes="(min-width: 1200px) 380px, (min-width: 900px) 33vw, 100vw"
+            loading={n === 0 ? 'eager' : 'lazy'}
+            fetchpriority={n === 0 ? 'high' : undefined}
+          />
+          <figcaption>FIG_{pad(n + 1)} · {f.caption}</figcaption>
+        </figure>
+      ))
+    }
+  </section>
+
+  <div class="wrap section body">
+    <article class="stack" style="--stack: 36px">
+      <section class="stack" style="--stack: 12px">
+        <h2 class="px h3">Wat doet het?</h2>
+        <p class="ph">Hier vertellen we binnenkort wat dit onderdeel doet tijdens een match.</p>
+      </section>
+      <section class="stack" style="--stack: 12px">
+        <h2 class="px h3">Hoe hebben we het ontworpen?</h2>
+        <p class="ph">Van eerste schets tot de versie op de robot: wat werkte niet, en wat hebben we veranderd? Dit verhaal volgt nog.</p>
+      </section>
+      <section class="stack" style="--stack: 12px">
+        <h2 class="px h3">Wat hebben we geleerd?</h2>
+        <p class="ph">Volgt nog.</p>
+      </section>
+    </article>
+
+    <aside aria-labelledby="h-adopt">
+      <div class="card shadow adopt stack" style="--stack: 14px">
+        <p class="tag">&gt; sponsor_slot: leeg</p>
+        <h2 id="h-adopt" class="px">Adopteer dit onderdeel</h2>
+        <p class="muted">Jouw bedrijfsnaam op dit onderdeel van de robot én op deze pagina.</p>
+        <a href="/sponsors/#pakketten" class="btn">Bekijk pakketten →</a>
+      </div>
+    </aside>
+  </div>
+
+  <nav aria-label="Alle onderdelen" class="band pnav">
+    <div class="wrap stack" style="--stack: 20px">
+      <div class="row prevnext">
+        <a href={`/porcupine/${prev.slug}/`} class="btn ghost" rel="prev">← {pad(prev.n)} {prev.name}</a>
+        <a href={`/porcupine/${next.slug}/`} class="btn" rel="next">{pad(next.n)} {next.name} →</a>
+      </div>
+      <ul class="list-reset row" style="--row: 10px">
+        {
+          parts.map((p) => (
+            <li>
+              <a class:list={['pill', 'mono', { on: p === part }]} href={`/porcupine/${p.slug}/`} aria-current={p === part ? 'page' : undefined}>
+                {pad(p.n)} {p.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </nav>
+</Base>
+
+<style>
+  .crumbs-wrap {
+    padding-top: 28px;
+  }
+  .crumbs {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .crumbs [aria-current] {
+    color: var(--paper);
+  }
+  .head {
+    padding-block: clamp(24px, 4vw, 40px) clamp(32px, 4vw, 56px);
+  }
+  .title {
+    font-size: clamp(48px, 8vw, 104px);
+    line-height: 0.95;
+    color: var(--yellow);
+  }
+  .figs figure :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+  }
+  .figs figcaption {
+    padding: 10px 0;
+  }
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+  }
+  @media (min-width: 960px) {
+    .body {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+  }
+  .h3 {
+    font-size: clamp(28px, 3vw, 34px);
+    color: var(--white);
+  }
+  .adopt {
+    padding: 24px;
+  }
+  .adopt h2 {
+    font-size: 28px;
+    color: var(--yellow);
+    line-height: 1.1;
+  }
+  .pnav {
+    border-bottom: 0;
+    padding-block: 32px 40px;
+  }
+  .prevnext {
+    justify-content: space-between;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 2px solid var(--line);
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .pill:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+  .pill.on {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--ink);
+  }
+</style>

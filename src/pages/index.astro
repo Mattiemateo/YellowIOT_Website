@@ -1,0 +1,409 @@
+---
+import { statSync } from 'node:fs';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import RobotExplorer from '../components/RobotExplorer.astro';
+import SponsorList from '../components/SponsorList.astro';
+import { site, crowdfunding } from '../data/site';
+import { parts } from '../data/parts';
+import teamNot from '../assets/team/not.jpg';
+import teamMatch from '../assets/team/match.jpg';
+import teamWorking from '../assets/team/working.jpg';
+import teamFta from '../assets/team/fta.jpg';
+
+const pct = Math.round((crowdfunding.raised / crowdfunding.goal) * 100);
+const pdfMb = (statSync('public/portfolio.pdf').size / 1024 / 1024).toFixed(1).replace('.', ',');
+
+const team = [
+  { src: teamNot, alt: 'Het team aan het werk op de NOT', caption: 'NOT — aan het werk' },
+  { src: teamMatch, alt: 'Onze robot in een wedstrijd', caption: 'In een match' },
+  { src: teamWorking, alt: 'Teamleden werken aan de robot', caption: 'Werken aan de robot' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.name,
+    url: `${site.url}/`,
+    inLanguage: 'nl-NL',
+    publisher: { '@id': `${site.url}/#team` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Onderdelen van ${site.robot}, de robot van seizoen ${site.season}`,
+    itemListElement: parts.map((p) => ({
+      '@type': 'ListItem',
+      position: p.n,
+      name: p.name,
+      url: `${site.url}/porcupine/${p.slug}/`,
+    })),
+  },
+];
+---
+
+<Base title={`${site.name} #${site.teamNumber} — FTC-roboticateam`} jsonLd={jsonLd}>
+  <section id="robot" aria-labelledby="h1" class="wrap hero">
+    <div class="hero-top">
+      <div class="stack" style="--stack: 18px">
+        <p class="tag">&gt; ./porcupine — onze robot voor seizoen 2026</p>
+        <h1 id="h1" class="px block h1">Wij bouwen robots.<br /><span class="white">Bouw jij mee?</span></h1>
+      </div>
+      <div class="stack" style="--stack: 22px">
+        <p class="lead">
+          Wij zijn {site.name}: drie jongeren van 15 die meedoen aan de FIRST Tech Challenge. We houden van robotica en vooral van bouwen. Elke uitdaging is een kans om te leren, te groeien en de volgende generatie ingenieurs te inspireren.
+        </p>
+        <div class="row">
+          <a href="/sponsors/" class="btn">Word sponsor →</a>
+          <a href="/doe-mee/" class="btn ghost">Kom in het team</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-head">
+      <h2 class="mono">// Verken {site.robot}</h2>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="mono muted count" aria-hidden="true">{parts.length} onderdelen</span>
+    </div>
+    <RobotExplorer />
+  </section>
+
+  <section aria-label="Team in cijfers" class="band">
+    <dl class="wrap stats">
+      <div><dt class="mono">TEAMNUMMER</dt><dd class="px stat">#{site.teamNumber} <span>FIRST Tech Challenge</span></dd></div>
+      <div><dt class="mono">TEAMLEDEN</dt><dd class="px stat">{site.members} <span>alle drie {site.memberAge} jaar</span></dd></div>
+      <div><dt class="mono">LAATSTE CROWDFUNDING</dt><dd class="px stat">{pct}% <span>in één avond</span></dd></div>
+      <div><dt class="mono">FTC PREMIER EVENT</dt><dd class="px stat">25+ <span>landen ontmoet</span></dd></div>
+    </dl>
+  </section>
+
+  <section aria-labelledby="h-sponsor" class="wrap section split">
+    <div class="stack">
+      <p class="tag">&gt; partners.find()</p>
+      <h2 id="h-sponsor" class="px block h2-lg">Jouw logo op onze robot?</h2>
+      <p class="lead">Je steun helpt ons verder in de FIRST Tech Challenge. Elke bijdrage — groot of klein — maakt direct verschil in hoe we kunnen innoveren en meedoen. Bedrijven kunnen sponsoren met geld, materiaal of kennis.</p>
+      <div class="card proof">
+        <span class="px">{pct}%</span>
+        <span class="muted">van ons doel van €{crowdfunding.goal} opgehaald door <strong>{crowdfunding.supporters} supporters</strong> — binnen één avond. Daarmee bouwden we een langere, sterkere lift.</span>
+      </div>
+      <div class="row">
+        <a href="/sponsors/" class="btn">Bekijk sponsorpakketten →</a>
+        <a href={site.bunq} class="btn ghost" rel="noopener">Doneer via bunq.me</a>
+      </div>
+    </div>
+    <div>
+      <h3 class="eyebrow" style="margin-bottom: 16px">Waar gaat je steun naartoe?</h3>
+      <ul class="list-reset stack" style="--stack: 14px">
+        <li class="card icon-card">
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFD21F" stroke-width="2" stroke-linecap="square"><rect x="4" y="7" width="16" height="12"></rect><path d="M9 7V4h6v3M8 12h2M14 12h2M9 16h6"></path></svg>
+          <div><strong>Robotonderdelen</strong><span class="muted">Motoren, sensoren en mechanische onderdelen voor onze robot.</span></div>
+        </li>
+        <li class="card icon-card">
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFD21F" stroke-width="2" stroke-linecap="square"><path d="M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 20h8"></path></svg>
+          <div><strong>Wedstrijdkosten</strong><span class="muted">Deelnamekosten en reiskosten voor FTC-wedstrijden.</span></div>
+        </li>
+        <li class="card icon-card">
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFD21F" stroke-width="2" stroke-linecap="square"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M7 15h10"></path></svg>
+          <div><strong>Prototyping &amp; testmateriaal</strong><span class="muted">3D-printfilament, proto-onderdelen en materiaal om snel ideeën te testen.</span></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-join" class="yellow-band">
+    <div class="wrap section split center">
+      <div class="stack" style="--stack: 18px">
+        <p class="mono join-tag">&gt; ./hiring — min. {site.minJoinAge} jaar</p>
+        <h2 id="h-join" class="px h2-lg">We zoeken teamleden!</h2>
+        <p class="lead">Lijkt het je leuk om mee te bouwen aan techniek én aan ons verhaal? We breiden het team uit en zoeken vooral hulp bij:</p>
+        <div class="row"><a href="/doe-mee/" class="btn dark">Ik wil meedoen →</a></div>
+      </div>
+      <ul class="list-reset stack roles" style="--stack: 12px">
+        <li><span class="mono">01</span><span><strong>Social media &amp; content</strong> — foto/video, korte posts, stories</span></li>
+        <li><span class="mono">02</span><span><strong>Communicatie &amp; partnerships</strong> — berichten, sponsors en events</span></li>
+        <li><span class="mono">03</span><span><strong>Engineering portfolio</strong> — schrijven, redactie, lay-out</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="team" aria-labelledby="h-team" class="wrap section team">
+    <p class="tag" style="margin-bottom: 12px">&gt; ls ./team/in_actie</p>
+    <h2 id="h-team" class="px block h2" style="margin-bottom: 32px">Ons team in actie</h2>
+    <div class="grid">
+      {
+        team.map((t) => (
+          <figure class="card">
+            <div class="tint">
+              <Image src={t.src} alt={t.alt} widths={[400, 800]} sizes="(min-width: 1200px) 380px, (min-width: 860px) 33vw, 100vw" />
+            </div>
+            <figcaption>{t.caption}</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="media">
+      <div class="video" data-video>
+        <button type="button" class="facade" data-src="/media/team-in-actie.mp4" aria-label="Speel video: bekijk ons in actie">
+          <Image src={teamFta} alt="" widths={[640, 1000]} sizes="(min-width: 1200px) 760px, 100vw" class="poster" />
+          <span class="play-wrap">
+            <span class="play"><svg aria-hidden="true" width="34" height="34" viewBox="0 0 24 24" fill="#0B0B0C"><path d="M7 4v16l13-8z"></path></svg></span>
+            <span class="px play-label">Bekijk ons in actie</span>
+          </span>
+        </button>
+      </div>
+      <a href="/portfolio.pdf" class="card shadow-rust portfolio" id="portfolio">
+        <svg aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFD21F" stroke-width="2" stroke-linecap="square"><path d="M6 3h9l4 4v14H6zM14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg>
+        <span class="tag">engineering_portfolio.pdf</span>
+        <span class="px pf-title">Portfolio seizoen {site.season}</span>
+        <span class="muted">Een verslag van ons seizoen: ontwerp, bouw, code en outreach.</span>
+        <span class="mono pf-dl">Download PDF · {pdfMb} MB →</span>
+      </a>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-thanks" class="thanks">
+    <div class="wrap">
+      <h2 id="h-thanks" class="eyebrow" style="margin-bottom: 20px">Mogelijk gemaakt dankzij</h2>
+      <SponsorList />
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Video-facade: laad de 5 MB video pas als iemand op afspelen klikt.
+  document.querySelectorAll<HTMLButtonElement>('[data-video] .facade').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const video = document.createElement('video');
+      video.src = btn.dataset.src!;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.setAttribute('aria-label', 'Team Yellow IoT in actie');
+      btn.replaceWith(video);
+      video.focus();
+    }),
+  );
+</script>
+
+<style>
+  .hero {
+    padding-block: clamp(32px, 5vw, 56px) clamp(48px, 6vw, 72px);
+  }
+  .hero-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px 56px;
+    align-items: end;
+  }
+  @media (min-width: 960px) {
+    .hero-top {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+  }
+  .white {
+    color: var(--white);
+  }
+  .ex-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: clamp(64px, 9vw, 112px) 0 clamp(24px, 3vw, 36px);
+  }
+  .ex-head h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--yellow);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .rule {
+    flex: 1;
+    border-top: 2px dashed var(--line);
+  }
+  .count {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-block: 28px;
+  }
+  @media (min-width: 900px) {
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 900px) {
+    .stats .stat {
+      font-size: clamp(24px, 3vw, 40px);
+    }
+  }
+  .stats > div {
+    padding: 8px clamp(12px, 2vw, 20px);
+    border-left: 2px solid var(--line);
+  }
+  .stats dt {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .stat {
+    margin-top: 6px;
+    font-size: clamp(18px, 5.4vw, 30px);
+    line-height: 1.1;
+    color: var(--yellow);
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+  .stat span {
+    display: block;
+    font-family: var(--f-body);
+    font-weight: 500;
+    margin-top: 6px;
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.3;
+    color: var(--paper);
+    white-space: normal;
+    letter-spacing: 0;
+  }
+
+  .proof {
+    padding: 18px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+  }
+  .proof .muted {
+    flex: 1 1 220px;
+  }
+  .proof .px {
+    font-size: 44px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+  .proof .muted {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .proof strong {
+    color: var(--paper);
+  }
+  .icon-card .muted {
+    display: block;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .join-tag {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .roles li {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+  }
+  .roles .mono {
+    color: var(--yellow);
+  }
+
+  .team {
+    padding-bottom: clamp(48px, 8vw, 96px);
+  }
+  .media {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+  @media (min-width: 900px) {
+    .media {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+  }
+  .video,
+  .video :global(video) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+  .facade {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 2px solid var(--line);
+    background: #0e7a66;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  .facade :global(.poster) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.2) brightness(0.8);
+    mix-blend-mode: multiply;
+  }
+  .play-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+  }
+  .play {
+    width: 84px;
+    height: 84px;
+    background: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 5px 5px 0 var(--teal);
+  }
+  .facade:hover .play {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--teal);
+  }
+  .play-label {
+    font-size: 28px;
+    color: var(--white);
+  }
+  .portfolio {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--paper);
+  }
+  .portfolio:hover {
+    color: var(--paper);
+    border-color: var(--yellow);
+  }
+  .pf-title {
+    font-size: clamp(24px, 6vw, 30px);
+    color: var(--white);
+    line-height: 1.1;
+  }
+  .pf-dl {
+    margin-top: auto;
+    color: var(--yellow);
+    font-weight: 700;
+  }
+  .thanks {
+    border-top: 2px solid var(--line);
+    padding-block: 56px;
+  }
+</style>

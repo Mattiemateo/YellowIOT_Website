@@ -1,0 +1,530 @@
+---
+import { Image, Picture } from 'astro:assets';
+import { parts } from '../data/parts';
+import { site } from '../data/site';
+import robotSchem from '../assets/robot/full-robot-schem.webp';
+import robotColor from '../assets/robot/full-robot-color.webp';
+import ballImg from '../assets/robot/intake-detail-duo.webp';
+
+const first = parts[0];
+const stageSizes = '(min-width: 1200px) 660px, (min-width: 960px) 56vw, calc(100vw - 32px)';
+const lens = (x: number, y: number) => ({
+  lx: Math.min(70, Math.max(0, x - 15)),
+  ly: Math.min(70, Math.max(0, y - 15)),
+});
+const { lx, ly } = lens(first.x, first.y);
+---
+
+<div class="explorer" data-explorer style={`--lx:${lx}%;--ly:${ly}%`}>
+  <div class="ex-left">
+    <div class="toolbar">
+      <span class="mono hint">
+        <span class="hint-d">[ KLIK OP EEN NUMMER ]</span><span class="hint-m">[ TIK OP EEN NUMMER ]</span>
+        · scan: <span class="scan" data-scan>{first.name}</span>
+      </span>
+      <div class="seg" role="group" aria-label="Weergave robot">
+        <button type="button" aria-pressed="true" data-view="blue">BLUEPRINT</button>
+        <button type="button" aria-pressed="false" data-view="photo">FOTO</button>
+      </div>
+    </div>
+
+    <div class="stage" data-stage data-view="blue">
+      <span class="corner tl" aria-hidden="true"></span>
+      <span class="corner tr" aria-hidden="true"></span>
+      <span class="corner bl" aria-hidden="true"></span>
+      <span class="corner br" aria-hidden="true"></span>
+      <Picture
+        src={robotSchem}
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+        widths={[400, 600, robotSchem.width]}
+        sizes={stageSizes}
+        alt={`Blauwdruk-tekening van ${site.robot}, de robot van ${site.name} voor seizoen 2026, van voren gezien: shooter met Limelight-camera bovenop, intake-rollers onderaan`}
+        loading="eager"
+        fetchpriority="high"
+        class="stage-img"
+      />
+      <Picture
+        src={robotColor}
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+        widths={[400, 600, robotColor.width]}
+        sizes={stageSizes}
+        alt=""
+        loading="eager"
+        class="stage-img photo"
+      />
+      <div class="lens" aria-hidden="true"></div>
+      {
+        parts.map((p, i) => (
+          <button
+            type="button"
+            class="hot"
+            style={`left:${p.x}%;top:${p.y}%`}
+            data-pick={p.slug}
+            data-x={p.x}
+            data-y={p.y}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+            aria-label={`${p.n}: ${p.name}`}
+          >
+            {p.n}
+          </button>
+        ))
+      }
+      <button type="button" class="hot ball" style="left:51.4%;top:68.8%" data-pick="ball" data-x="51.4" data-y="68.8" aria-pressed="false" aria-label="Wat is dit?">?</button>
+    </div>
+  </div>
+
+  <div class="ex-right">
+    <div class="cards" aria-live="polite">
+      {
+        parts.map((p, i) => (
+          <article class="card shadow selcard" data-card={p.slug} hidden={i !== 0}>
+            <div class="pic">
+              <Image src={p.thumb} alt="" widths={[220, 440]} sizes="220px" loading={i === 0 ? 'eager' : 'lazy'} />
+            </div>
+            <div class="body">
+              <p class="tag">{p.kicker}</p>
+              <h3 class="px">{p.name}</h3>
+              <p class="muted">{p.teaser}</p>
+              <a href={`/porcupine/${p.slug}/`} class="btn">Bekijk {p.name} →</a>
+            </div>
+          </article>
+        ))
+      }
+      <article class="card shadow selcard" data-card="ball" hidden>
+        <div class="pic">
+          <Image src={ballImg} alt="" widths={[220, 440]} sizes="220px" loading="lazy" />
+        </div>
+        <div class="body">
+          <p class="tag">Geen onderdeel</p>
+          <h3 class="px">Dit is een bal.</h3>
+          <p class="muted">Hij heeft geen eigen pagina. Nog niet. Hij is er wel een beetje boos over.</p>
+        </div>
+      </article>
+    </div>
+
+    <div>
+      <h3 class="eyebrow list-title">Alle onderdelen</h3>
+      <ol class="list-reset parts-list">
+        {
+          parts.map((p, i) => (
+            <li>
+              <a href={`/porcupine/${p.slug}/`} class:list={['prow', { on: i === 0 }]} data-hover={p.slug}>
+                <span class="num mono">{p.n}</span>
+                <span class="pname">{p.name}</span>
+                <span class="mono" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+
+  <dialog class="sheet" aria-labelledby="sheet-title" data-sheet>
+    <div class="sheet-top">
+      <p class="tag" data-sheet-kicker></p>
+      <button type="button" class="x" data-close aria-label="Sluiten">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M5 5l14 14M19 5L5 19"></path></svg>
+      </button>
+    </div>
+    <div data-sheet-body></div>
+    <div class="sheet-nav">
+      <button type="button" class="btn ghost" data-step="-1">← Vorige</button>
+      <button type="button" class="btn ghost" data-step="1">Volgende →</button>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  import { initExplorer } from '../scripts/explorer';
+  document.querySelectorAll<HTMLElement>('[data-explorer]').forEach(initExplorer);
+</script>
+
+<style>
+  .explorer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  @media (min-width: 960px) {
+    .explorer {
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+  .ex-left,
+  .ex-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+  .ex-right {
+    gap: 28px;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .hint {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .scan {
+    color: var(--yellow);
+  }
+  .hint-d {
+    display: none;
+  }
+  @media (min-width: 960px) {
+    .hint-d {
+      display: inline;
+    }
+    .hint-m {
+      display: none;
+    }
+  }
+  .seg {
+    display: inline-flex;
+    border: 2px solid var(--line-2);
+  }
+  .seg button {
+    min-height: 40px;
+    padding: 0 14px;
+    background: transparent;
+    color: var(--muted);
+    border: 0;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+  .seg button[aria-pressed='true'] {
+    background: var(--yellow);
+    color: var(--ink);
+  }
+
+  .stage {
+    position: relative;
+    aspect-ratio: 802 / 759;
+    width: 100%;
+  }
+  .stage :global(.stage-img),
+  .stage :global(picture) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .stage :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .stage :global(.photo img),
+  .stage :global(img.photo) {
+    clip-path: inset(var(--ly) calc(70% - var(--lx)) calc(70% - var(--ly)) var(--lx));
+    transition: clip-path 0.35s steps(6);
+  }
+  .stage[data-view='photo'] :global(.photo img),
+  .stage[data-view='photo'] :global(img.photo) {
+    clip-path: inset(0 0 0 0);
+  }
+  .lens {
+    position: absolute;
+    left: var(--lx);
+    top: var(--ly);
+    width: 30%;
+    height: 30%;
+    border: 2px solid var(--yellow);
+    pointer-events: none;
+    transition:
+      left 0.35s steps(6),
+      top 0.35s steps(6);
+    background: repeating-linear-gradient(0deg, rgba(11, 11, 12, 0.22) 0 1px, transparent 1px 3px);
+  }
+  .lens::before,
+  .lens::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 4px solid var(--yellow);
+  }
+  .lens::before {
+    left: -8px;
+    top: -8px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .lens::after {
+    right: -8px;
+    bottom: -8px;
+    border-left: 0;
+    border-top: 0;
+  }
+  .stage[data-view='photo'] .lens {
+    display: none;
+  }
+  .corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--line-2);
+  }
+  @media (min-width: 760px) {
+    .corner {
+      width: 22px;
+      height: 22px;
+    }
+  }
+  .tl {
+    left: 0;
+    top: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .tr {
+    right: 0;
+    top: 0;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .bl {
+    left: 0;
+    bottom: 0;
+    border-right: 0;
+    border-top: 0;
+  }
+  .br {
+    right: 0;
+    bottom: 0;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .hot {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    background: var(--yellow);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    font-family: var(--f-mono);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--teal);
+  }
+  .hot::before {
+    content: '';
+    position: absolute;
+    inset: -9px;
+    border: 2px solid var(--yellow);
+    opacity: 0;
+    animation: ping 1.8s steps(5) infinite;
+  }
+  .hot[aria-pressed='true'] {
+    background: var(--teal);
+    color: var(--white);
+    box-shadow: 3px 3px 0 var(--yellow);
+  }
+  .hot.ball {
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: 2px dashed rgba(255, 210, 31, 0.55);
+    box-shadow: none;
+    color: transparent;
+  }
+  .hot.ball::before {
+    display: none;
+  }
+  .hot.ball:hover,
+  .hot.ball:focus-visible,
+  .hot.ball[aria-pressed='true'] {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+  @keyframes ping {
+    0% {
+      opacity: 0.9;
+      transform: scale(0.8);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  .selcard {
+    display: flex;
+    flex-direction: column;
+  }
+  .selcard[hidden] {
+    display: none;
+  }
+  .pic {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid var(--line);
+    background-image:
+      linear-gradient(rgba(20, 165, 139, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 165, 139, 0.12) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+  .pic :global(img) {
+    max-width: 88%;
+    max-height: 172px;
+    width: auto;
+    object-fit: contain;
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 20px 20px;
+  }
+  .body h3 {
+    font-size: 30px;
+    color: var(--white);
+  }
+  .body .muted {
+    margin-bottom: 6px;
+  }
+  .body .btn {
+    align-self: flex-start;
+  }
+  /* Op kleinere schermen opent een onderdeel als overlay (dialog); de kaart rechts verdwijnt. */
+  @media (max-width: 959px) {
+    .cards {
+      display: none;
+    }
+  }
+
+  .list-title {
+    margin-bottom: 10px;
+  }
+  .parts-list {
+    border-top: 2px solid var(--line);
+  }
+  .prow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 52px;
+    padding: 6px 12px;
+    color: var(--paper);
+    text-decoration: none;
+    border: 2px solid transparent;
+    border-bottom-color: var(--line);
+  }
+  .prow:hover,
+  .prow.on {
+    border-color: var(--yellow);
+    background: var(--panel);
+    color: var(--yellow);
+  }
+  .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex: none;
+    background: var(--yellow);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .prow.on .num {
+    background: var(--teal);
+    color: var(--white);
+  }
+  .pname {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  /* Bottom sheet */
+  .sheet {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: none;
+    max-height: 85vh;
+    padding: 0;
+    background: var(--panel);
+    color: var(--paper);
+    border: 0;
+    border-top: 2px solid var(--yellow);
+    box-shadow: 0 -8px 0 var(--teal);
+  }
+  .sheet[open] {
+    animation: up 0.22s steps(4);
+  }
+  .sheet::backdrop {
+    background: rgba(11, 11, 12, 0.72);
+  }
+  @keyframes up {
+    from {
+      transform: translateY(40%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  .sheet-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 12px 0 20px;
+  }
+  .x {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: var(--paper);
+    border: 2px solid var(--line-2);
+    cursor: pointer;
+  }
+  .sheet :global(.pic) {
+    height: 170px;
+    margin: 12px 20px 0;
+    border: 2px solid var(--line);
+  }
+  .sheet :global(.pic img) {
+    max-height: 150px;
+  }
+  .sheet :global(.body) {
+    padding: 16px 20px 8px;
+  }
+  .sheet :global(.body .tag) {
+    display: none;
+  }
+  .sheet :global(.body .btn) {
+    align-self: stretch;
+  }
+  .sheet-nav {
+    display: flex;
+    gap: 12px;
+    padding: 8px 20px 24px;
+  }
+  .sheet-nav .btn {
+    flex: 1;
+  }
+</style>
