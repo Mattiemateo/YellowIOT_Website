@@ -1,0 +1,79 @@
+---
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer id="contact" class="site-footer">
+  <div class="wrap top">
+    <div class="stack" style="--stack: 12px">
+      <p class="px name">{site.name} #{site.teamNumber}</p>
+      <p class="muted intro">FTC-roboticateam. Vragen, samenwerken of gewoon benieuwd hoe het gaat? We horen graag van je.</p>
+      <a href={`mailto:${site.email}`} class="mono mail">{site.email}</a>
+    </div>
+    <nav aria-label="Footer" class="mono links">
+      <a href="/#robot">{site.robot}</a>
+      <a href="/sponsors/">Sponsors</a>
+      <a href="/doe-mee/">Doe mee</a>
+      <a href="/#team">Team</a>
+      <a href="/bedankt/">Ons verhaal</a>
+      <a href="/portfolio.pdf">Portfolio (PDF)</a>
+      <a href={site.linkedin} rel="noopener">LinkedIn ↗</a>
+      <a href={site.instagram} rel="noopener">Instagram ↗</a>
+    </nav>
+  </div>
+  <div class="wrap">
+    <p class="mono cursor copy">© {year} {site.name}. Building the future, one robot at a time</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 2px solid var(--line);
+    background: var(--ink-2);
+  }
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding-block: 56px 40px;
+  }
+  @media (min-width: 760px) {
+    .top {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .name {
+    font-size: 28px;
+    color: var(--yellow);
+  }
+  .intro {
+    max-width: 44ch;
+  }
+  .mail {
+    font-size: 17px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+  .links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    align-content: start;
+    font-size: 15px;
+  }
+  .links a {
+    color: var(--paper);
+    text-decoration: none;
+    padding: 10px 0;
+  }
+  .links a:hover {
+    color: var(--yellow);
+  }
+  .copy {
+    margin: 0;
+    padding-block: 20px 32px;
+    border-top: 2px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>

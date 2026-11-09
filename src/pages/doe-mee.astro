@@ -1,0 +1,171 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import working from '../assets/team/working.jpg';
+
+const roles = [
+  { n: '01', name: 'Social media & content', text: 'Foto en video, korte posts, stories. Laat de wereld zien wat we bouwen.' },
+  { n: '02', name: 'Communicatie & partnerships', text: 'Berichten, sponsors en events. Jij zorgt dat we nieuwe partners vinden.' },
+  { n: '03', name: 'Engineering portfolio', text: "Schrijven, redactie en lay-out van het portfolio dat jury's lezen." },
+];
+
+const plans = [
+  'Nieuwe robotontwerpen testen en sneller itereren',
+  'Software verbeteren: betere autonoom en driveteam-tools',
+  "Actieve updates: website, socials en video's",
+  'Professioneel engineering portfolio en teampresentatie',
+];
+---
+
+<Base
+  title="Doe mee: kom in het team"
+  description={`${site.name} zoekt teamleden vanaf ${site.minJoinAge} jaar: social media & content, communicatie & partnerships en engineering portfolio. Robotervaring is niet nodig.`}
+  current="doe-mee"
+>
+  <section class="wrap hero" aria-labelledby="h1">
+    <div class="stack" style="--stack: 22px">
+      <p class="tag">&gt; ./hiring — min. {site.minJoinAge} jaar</p>
+      <h1 id="h1" class="px block h1">Bouw mee aan<br /><span class="white">techniek én ons verhaal</span></h1>
+      <p class="lead">We breiden het team uit! Je hoeft geen robotexpert te zijn: we zoeken vooral mensen die goed zijn in vertellen, filmen, schrijven en contact leggen.</p>
+      <a href="#aanmelden" class="btn" style="align-self: flex-start">Ik wil meedoen →</a>
+    </div>
+    <div class="term mono" role="img" aria-label={`Terminal: leeftijd ${site.minJoinAge}+, ervaring niet nodig, open voor aanmelding`}>
+      <span class="t">$</span> ./join --team yellowiot<br />
+      <span class="k">&gt; leeftijd ......</span> <span class="y">{site.minJoinAge}+</span><br />
+      <span class="k">&gt; ervaring .....</span> <span class="y">niet nodig</span><br />
+      <span class="k">&gt; status .......</span> <span class="t">open_voor_aanmelding</span><span class="cursor"></span>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-roles" class="band">
+    <div class="wrap section">
+      <h2 id="h-roles" class="px h2" style="margin-bottom: 32px">Open rollen</h2>
+      <ul class="list-reset grid roles">
+        {
+          roles.map((r) => (
+            <li class="card">
+              <span class="mono y">ROL_{r.n}</span>
+              <h3 class="px">{r.name}</h3>
+              <p class="muted">{r.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap section plan" aria-labelledby="h-plan">
+    <Image src={working} alt="Teamleden werken samen aan de robot" widths={[400, 800]} sizes="(min-width: 960px) 440px, 100vw" class="plan-img" />
+    <div>
+      <h2 id="h-plan" class="px h2" style="margin-bottom: 20px">Wat staat er op de planning?</h2>
+      <ol class="list-reset">
+        {plans.map((p) => <li><span class="mono y" aria-hidden="true">▶</span>{p}</li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section id="aanmelden" aria-labelledby="h-form" class="yellow-band">
+    <div class="wrap section split">
+      <div class="stack" style="--stack: 16px">
+        <h2 id="h-form" class="px h2-lg">Stuur ons een bericht</h2>
+        <p class="lead">Lijkt het je leuk? Vul dit in, dan nodigen we je uit om een keer mee te komen bouwen.</p>
+        <p>Of mail naar <a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <form name="aanmelding" method="POST" action="/verstuurd/" data-netlify="true" netlify-honeypot="bot-field" class="form">
+        <input type="hidden" name="form-name" value="aanmelding" />
+        <p class="hp"><label>Niet invullen: <input name="bot-field" /></label></p>
+        <div><label class="lbl" for="j-name">Naam</label><input class="inp" id="j-name" name="name" autocomplete="name" required /></div>
+        <div><label class="lbl" for="j-age">Leeftijd</label><input class="inp" id="j-age" name="age" type="number" min={site.minJoinAge} max="25" inputmode="numeric" /></div>
+        <div class="full"><label class="lbl" for="j-mail">E-mail</label><input class="inp" id="j-mail" name="email" type="email" autocomplete="email" required /></div>
+        <fieldset class="full">
+          <legend>Waar heb je zin in?</legend>
+          <label class="chk"><input type="checkbox" name="role" value="content" />Social media &amp; content</label>
+          <label class="chk"><input type="checkbox" name="role" value="partners" />Communicatie &amp; partnerships</label>
+          <label class="chk"><input type="checkbox" name="role" value="portfolio" />Engineering portfolio</label>
+          <label class="chk"><input type="checkbox" name="role" value="build" />Bouwen, CAD of programmeren</label>
+        </fieldset>
+        <div class="full"><label class="lbl" for="j-msg">Vertel iets over jezelf</label><textarea class="inp" id="j-msg" name="message" rows="4"></textarea></div>
+        <button type="submit" class="btn full">Verstuur aanmelding →</button>
+      </form>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .white {
+    color: var(--white);
+  }
+  .y {
+    color: var(--yellow);
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+    padding-block: clamp(40px, 6vw, 64px) clamp(48px, 6vw, 72px);
+  }
+  @media (min-width: 960px) {
+    .hero {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+  }
+  .term {
+    background: #070708;
+    border: 2px solid var(--teal);
+    font-size: clamp(13px, 1.4vw, 15px);
+    line-height: 1.8;
+    padding: clamp(16px, 2vw, 20px) clamp(16px, 2vw, 22px);
+    box-shadow: 8px 8px 0 var(--rust);
+    overflow-wrap: anywhere;
+  }
+  .term .t {
+    color: var(--teal-lt);
+  }
+  .term .k {
+    color: var(--muted);
+  }
+  .roles .card {
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .roles .mono {
+    font-size: 14px;
+  }
+  .roles h3 {
+    font-size: 28px;
+    color: var(--white);
+  }
+  .plan {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .plan {
+      grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+    }
+  }
+  .plan :global(.plan-img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 2px solid var(--line);
+    box-shadow: 8px 8px 0 var(--teal);
+  }
+  @media (max-width: 899px) {
+    .plan :global(.plan-img) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  .plan li {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 2px solid var(--line);
+  }
+</style>

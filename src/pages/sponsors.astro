@@ -1,0 +1,322 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SponsorGoal from '../components/SponsorGoal.astro';
+import { site, sponsors, tiers, crowdfunding } from '../data/site';
+import sideRobot from '../assets/robot/side-robot-duo.webp';
+
+const pct = Math.round((crowdfunding.raised / crowdfunding.goal) * 100);
+
+const faq = [
+  {
+    q: 'Wat is FTC?',
+    a: 'FIRST Tech Challenge is een internationale roboticacompetitie voor middelbare scholieren. Teams bouwen en programmeren robots om specifieke uitdagingen op te lossen.',
+  },
+  {
+    q: 'Kunnen we samenwerken?',
+    a: 'Absoluut! We staan altijd open voor samenwerking met andere teams, scholen of bedrijven die geïnteresseerd zijn in robotica-educatie.',
+  },
+  {
+    q: 'Hoe kan ik het team nog meer steunen?',
+    a: 'Volg ons op social media en deel ons verhaal met anderen die geïnteresseerd zijn in robotica.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+
+<Base
+  title="Sponsor de ingenieurs van morgen"
+  description={`Sponsor ${site.name} (#${site.teamNumber}): je logo op robot ${site.robot}, op onze shirts en website. Bekijk de sponsorpakketten of doneer direct.`}
+  current="sponsors"
+  cta={{ href: '#contact-form', label: 'Contact', short: 'Contact' }}
+  jsonLd={jsonLd}
+>
+  <section class="wrap hero" aria-labelledby="h1">
+    <div class="stack" style="--stack: 22px">
+      <p class="tag">&gt; sponsor.init()</p>
+      <h1 id="h1" class="px block h1 white">Sponsor de ingenieurs <span class="y">van morgen</span></h1>
+      <p class="lead">Help FTC {site.name} naar het volgende niveau. Drie jonge robotbouwers van 15 jaar ontwerpen, bouwen en programmeren elk seizoen een nieuwe robot — en met jouw steun komen we verder.</p>
+      <div class="row">
+        <a href="#contact-form" class="btn">Plan een kennismaking →</a>
+        <a href="#pakketten" class="btn ghost">Bekijk pakketten</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <Picture
+        src={sideRobot}
+        formats={['avif', 'webp']}
+        fallbackFormat="webp"
+        widths={[400, 600, sideRobot.width]}
+        sizes="(min-width: 960px) 480px, calc(100vw - 32px)"
+        alt={`Zijaanzicht van ${site.robot}, onze robot, met kettingaandrijving en Limelight-camera`}
+        loading="eager"
+        fetchpriority="high"
+      />
+      <span class="mono logo-here" aria-hidden="true">[ JOUW LOGO HIER ]</span>
+    </div>
+  </section>
+
+  <SponsorGoal />
+
+  <section aria-labelledby="h-why" class="band">
+    <div class="wrap section">
+      <h2 id="h-why" class="px h2" style="margin-bottom: 32px">Wat levert het jou op?</h2>
+      <ul class="list-reset grid why">
+        <li class="card">
+          <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFD21F" stroke-width="2" stroke-linecap="square"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path><rect x="10" y="10" width="4" height="4"></rect></svg>
+          <h3 class="px">Zichtbaarheid</h3>
+          <p class="muted">Je logo op de robot, op onze shirts en stand, op deze website en in onze posts op LinkedIn en Instagram.</p>
+        </li>
+        <li class="card">
+          <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFD21F" stroke-width="2" stroke-linecap="square"><rect x="8" y="3" width="8" height="8"></rect><path d="M4 21v-4a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4"></path></svg>
+          <h3 class="px">Jong techtalent</h3>
+          <p class="muted">Kom in contact met jongeren die nu al CAD, programmeren en teamwork leren. Wij komen graag een demo geven bij jouw bedrijf.</p>
+        </li>
+        <li class="card">
+          <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFD21F" stroke-width="2" stroke-linecap="square"><path d="M12 21V9M12 9l-5 5M12 9l5 5M4 3h16"></path></svg>
+          <h3 class="px">Echte impact</h3>
+          <p class="muted">Elke euro gaat naar robotonderdelen, wedstrijdkosten en prototyping. We laten precies zien wat we ermee bouwen.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="pakketten" class="wrap tiers-sec" aria-labelledby="h-tiers">
+    <p class="tag" style="margin-bottom: 12px">&gt; select --tier</p>
+    <h2 id="h-tiers" class="px block h2" style="margin-bottom: 32px">Sponsorpakketten</h2>
+    <div class="grid tiers" style="--min: 280px">
+      {
+        tiers.map((t, i) => (
+          <article class:list={['card', 'tier', { featured: t.featured }]}>
+            <p class="mono tier-n">
+              TIER_0{i + 1}
+              {t.featured && ' · POPULAIR'}
+            </p>
+            <h3 class="px tier-name">{t.name}</h3>
+            <p class="mono tier-tag">&gt; {t.tagline}</p>
+            <p class="px tier-price">{t.price ?? 'Bedrag in overleg'}</p>
+            <ul class="list-reset perks">
+              {t.perks.map((p) => <li>{p}</li>)}
+            </ul>
+            <a href="#contact-form" class:list={['btn', { ghost: !t.featured }]} data-tier={t.name}>
+              Kies {t.name}
+            </a>
+          </article>
+        ))
+      }
+    </div>
+    <div class="card natura">
+      <div>
+        <h3 class="px">Liever in natura?</h3>
+        <p class="muted">Materiaal, 3D-printen, frezen, een werkplek of een mentor met technische kennis: het helpt allemaal.</p>
+      </div>
+      <a href="#contact-form" class="btn ghost" data-tier="In natura">Bied iets aan</a>
+    </div>
+  </section>
+
+  <section class="wrap proof" aria-labelledby="h-proof">
+    <div class="card stack" style="--stack: 10px">
+      <h2 id="h-proof" class="eyebrow">Bewijs dat het werkt</h2>
+      <p class="px big">{pct}%</p>
+      <p>Met de laatste crowdfunding haalden we €{crowdfunding.raised} op bij {crowdfunding.supporters} supporters — binnen één avond. Zo konden we meteen bestellen: 8 lineaire sliders, een extra motor en sterker draad voor een langere, snellere lift. Daarmee gingen we naar het FTC Premier Event in Eindhoven.</p>
+      <a href="/bedankt/" class="mono more">Lees het hele verhaal →</a>
+    </div>
+    <div class="card stack" style="--stack: 14px">
+      <h2 class="eyebrow">Particulier? Doneer direct</h2>
+      <p>Elke donatie — groot of klein — heeft direct impact. Klik hieronder en help ons groeien. Dankjewel namens het hele team!</p>
+      <a href={site.bunq} class="btn" style="align-self: flex-start" rel="noopener">Doneer via bunq.me ↗</a>
+      <p class="mono muted small">Huidige sponsors: {sponsors.join(' · ')}</p>
+    </div>
+  </section>
+
+  <section id="contact-form" aria-labelledby="h-contact" class="yellow-band">
+    <div class="wrap section split">
+      <div class="stack" style="--stack: 16px">
+        <h2 id="h-contact" class="px h2-lg">Laten we kennismaken</h2>
+        <p class="lead">Vertel kort wie je bent en wat je zoekt. We nemen zo snel mogelijk contact met je op.</p>
+        <p>Of mail: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <form name="sponsor" method="POST" action="/verstuurd/" data-netlify="true" netlify-honeypot="bot-field" class="form">
+        <input type="hidden" name="form-name" value="sponsor" />
+        <p class="hp"><label>Niet invullen: <input name="bot-field" /></label></p>
+        <div><label class="lbl" for="s-name">Naam</label><input class="inp" id="s-name" name="name" autocomplete="name" required /></div>
+        <div><label class="lbl" for="s-org">Bedrijf</label><input class="inp" id="s-org" name="organization" autocomplete="organization" /></div>
+        <div class="full"><label class="lbl" for="s-mail">E-mail</label><input class="inp" id="s-mail" name="email" type="email" autocomplete="email" required /></div>
+        <div class="full">
+          <label class="lbl" for="s-tier">Interesse</label>
+          <select class="inp" id="s-tier" name="tier">
+            {tiers.map((t) => <option selected={t.featured}>{t.name}</option>)}
+            <option>In natura</option>
+            <option>Weet ik nog niet</option>
+          </select>
+        </div>
+        <div class="full"><label class="lbl" for="s-msg">Bericht</label><textarea class="inp" id="s-msg" name="message" rows="4"></textarea></div>
+        <button type="submit" class="btn full">Verstuur →</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="wrap section faq" aria-labelledby="h-faq">
+    <h2 id="h-faq" class="px h2" style="margin-bottom: 20px">Veelgestelde vragen</h2>
+    {
+      faq.map((f, i) => (
+        <details open={i === 0}>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))
+    }
+  </section>
+</Base>
+
+<script>
+  // "Kies Motor" e.d. vult het formulier alvast in.
+  const select = document.querySelector<HTMLSelectElement>('#s-tier');
+  document.querySelectorAll<HTMLAnchorElement>('[data-tier]').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      if (!select) return;
+      e.preventDefault();
+      select.value = a.dataset.tier!;
+      document.querySelector('#contact-form')?.scrollIntoView();
+      document.querySelector<HTMLInputElement>('#s-name')?.focus({ preventScroll: true });
+    }),
+  );
+</script>
+
+<style>
+  .white {
+    color: var(--white);
+  }
+  .y {
+    color: var(--yellow);
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+    padding-block: clamp(40px, 6vw, 64px) clamp(48px, 6vw, 72px);
+  }
+  @media (min-width: 960px) {
+    .hero {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+  }
+  .hero-img {
+    position: relative;
+  }
+  .hero-img :global(img) {
+    width: 100%;
+  }
+  .logo-here {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    background: var(--yellow);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  .why .card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .why h3 {
+    font-size: 24px;
+    color: var(--yellow);
+  }
+  .tiers-sec {
+    padding-block: clamp(48px, 8vw, 88px) 40px;
+  }
+  .tiers {
+    gap: 20px;
+  }
+  .tier {
+    padding: clamp(22px, 3vw, 28px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .tier.featured {
+    border-color: var(--yellow);
+    box-shadow: 8px 8px 0 var(--teal);
+  }
+  .tier-n {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .featured .tier-n {
+    color: var(--teal-lt);
+  }
+  .tier-name {
+    font-size: 36px;
+    color: var(--white);
+  }
+  .tier-tag {
+    margin-top: -8px;
+    font-size: 13px;
+    color: var(--teal-lt);
+  }
+  .tier-price {
+    font-size: 24px;
+    color: var(--yellow);
+  }
+  .perks {
+    flex: 1;
+  }
+  .perks li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    line-height: 1.45;
+  }
+  .natura {
+    margin-top: 20px;
+    padding: 24px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .natura > div {
+    flex: 1 1 320px;
+  }
+  .natura h3 {
+    font-size: 26px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .proof {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: 20px;
+    padding-block: 56px 72px;
+  }
+  .proof .card {
+    padding: 28px;
+  }
+  .big {
+    font-size: 64px;
+    line-height: 1;
+    color: var(--yellow);
+  }
+  .more {
+    font-weight: 700;
+  }
+  .small {
+    font-size: 13px;
+  }
+  .faq {
+    max-width: 880px;
+  }
+</style>

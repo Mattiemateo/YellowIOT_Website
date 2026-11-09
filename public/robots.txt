@@ -1,0 +1,7 @@
+# Welkom, robot. Wij bouwen er ook een paar.
+# Mensen die dit lezen: https://www.yellowiot.nl/doe-mee/
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.yellowiot.nl/sitemap-index.xml

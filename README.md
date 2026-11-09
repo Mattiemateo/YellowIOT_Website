@@ -1,120 +1,66 @@
-# Team Yellow IOT - Redesigned Website
+# Team Yellow IoT — www.yellowiot.nl
 
-This is a modern, redesigned version of the Team Yellow IOT website with improved design, better user experience, and enhanced visual appeal.
+Website van FTC-team **Yellow IoT #25905**: robot Porcupine verkennen, sponsors vinden en nieuwe teamleden werven.
+Gebouwd met [Astro](https://astro.build) als statische site, gehost op Netlify.
 
-## 🎨 Design Improvements
+## Lokaal draaien
 
-### Visual Enhancements
-- **Modern Gradient Background**: Beautiful purple-blue gradient background
-- **Glass Morphism Design**: Semi-transparent containers with backdrop blur effects
-- **Smooth Animations**: Hover effects, transitions, and loading animations
-- **Better Typography**: Inter font family for improved readability
-- **Professional Color Scheme**: Consistent purple-blue theme throughout
-
-### Layout Improvements
-- **Sticky Header**: Navigation stays at the top while scrolling
-- **Grid Layout**: Modern CSS Grid for better responsive design
-- **Card-based Design**: Content organized in elegant cards with shadows
-- **Better Spacing**: Improved margins, padding, and visual hierarchy
-
-### User Experience
-- **Responsive Design**: Optimized for all screen sizes
-- **Loading Optimizations**: Lazy loading for images
-- **Accessibility**: Better contrast ratios and semantic HTML
-- **Interactive Elements**: Hover effects and smooth transitions
-
-## 📁 File Structure
-
-```
-redesigned/
-├── index.html          # Homepage with team introduction
-├── donate.html         # Donation page with story and goals
-├── thank-you.html      # Thank you page with crowdfunding results
-├── contact.html        # Contact page with team information
-├── styles.css          # Modern CSS with animations and responsive design
-└── README.md           # This file
+```sh
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # bouwt naar dist/
+npm run preview   # bekijk de build
 ```
 
-## 🚀 Features
+Node 22.23.4 of nieuwer.
 
-### Homepage (index.html)
-- Team introduction with enhanced content
-- Photo gallery with hover effects
-- Video section with improved styling
-- Call-to-action for donations
+## Waar staat wat?
 
-### Donation Page (donate.html)
-- Compelling story presentation
-- Clear donation goals and impact
-- Visual breakdown of how funds are used
-- Professional donation button
+| Wat | Waar |
+| --- | --- |
+| Teamgegevens, sponsors, sponsorpakketten, menu | `src/data/site.ts` |
+| Onderdelen van Porcupine (naam, uitleg, hotspot-positie, foto's) | `src/data/parts.ts` |
+| Pagina's | `src/pages/` (`porcupine/[slug].astro` maakt alle onderdeelpagina's) |
+| Kleuren, lettertypes, knoppen | `src/styles/global.css` |
+| Robotverkenner op de homepage | `src/components/RobotExplorer.astro` + `src/scripts/explorer.ts` |
+| 404-spelletje | `src/pages/404.astro` + `src/scripts/game.ts` |
+| Paaseieren (logo 5× klikken, console) | `src/scripts/eggs.ts` |
+| Portfolio-PDF en video | `public/portfolio.pdf`, `public/media/` |
 
-### Thank You Page (thank-you.html)
-- Gratitude section with personal touch
-- Crowdfunding success highlights
-- Detailed breakdown of purchases
-- Future plans and continued support
+## Sponsorbalk bijwerken
 
-### Contact Page (contact.html)
-- Multiple contact methods
-- Team information cards
-- FAQ section
-- Social media integration
+De voortgangsbalk op `/sponsors/` leest twee omgevingsvariabelen tijdens de build:
 
-## 🎯 Key Improvements
+- `SPONSOR_RAISED`: totaal opgehaald bedrag in euro's (standaard `600`)
+- `SPONSOR_GOAL`: seizoensdoel in euro's (standaard `3500`)
 
-1. **Modern Design Language**: Contemporary UI/UX principles
-2. **Better Content Organization**: Clear sections and improved readability
-3. **Enhanced Visual Hierarchy**: Better use of typography and spacing
-4. **Professional Appearance**: Suitable for a robotics competition team
-5. **Mobile-First Approach**: Optimized for all devices
-6. **Performance Optimized**: Efficient CSS and lazy loading
+In Netlify: **Site configuration → Environment variables**, pas de waarde aan en kies daarna **Deploys → Trigger deploy → Deploy site**.
+Lokaal testen kan met `SPONSOR_RAISED=1250 npm run build`.
 
-## 🛠 Technical Features
+## Formulieren
 
-- **CSS Grid & Flexbox**: Modern layout techniques
-- **CSS Custom Properties**: Consistent theming
-- **Backdrop Filters**: Glass morphism effects
-- **CSS Animations**: Smooth transitions and hover effects
-- **Responsive Images**: Optimized for different screen sizes
-- **Semantic HTML**: Better accessibility and SEO
+Het sponsorformulier (`sponsor`) en het aanmeldformulier (`aanmelding`) gebruiken Netlify Forms.
+Inzendingen staan in Netlify onder **Forms**; zet daar ook een e-mailmelding naar team@yellowiot.nl aan.
 
-## 📱 Responsive Design
+## Nieuwe robotfoto's
 
-The website is fully responsive and optimized for:
-- Desktop computers (1200px+)
-- Tablets (768px - 1199px)
-- Mobile phones (320px - 767px)
+```sh
+tools/process-photos.sh 2026-season/intake.HEIC intake
+```
 
-## 🎨 Color Palette Options
+Dit draait de foto goed, knipt de robot uit (Apple Vision, alleen op macOS) en maakt drie varianten in
+`src/assets/robot/`: `-color`, `-duo` (geel/teal duotoon) en `-schem` (blauwdruk). Daarna de foto koppelen in
+`src/data/parts.ts`. Nodig: ImageMagick (`brew install imagemagick`) en Xcode command line tools.
 
-This redesigned website comes with **4 different color palette options**:
+## SEO en AI-agents
 
-### 1. **Original Purple-Blue** (Default)
-- **Background**: Purple to blue gradient (#667eea to #764ba2)
-- **Accent**: Green for CTAs (#48bb78)
-- **Mood**: Professional, modern, tech-focused
+- Elke pagina heeft een eigen titel, beschrijving, canonical URL en Open Graph-afbeelding (`public/og.jpg`).
+- JSON-LD: team (`SportsTeam`), website, onderdelenlijst, FAQ en kruimelpaden.
+- `sitemap-index.xml` wordt automatisch gemaakt; `robots.txt` verwijst ernaar.
+- `/llms.txt` is een korte samenvatting voor AI-agents, met actuele cijfers uit `site.ts` en de sponsorbalk.
+- Oude URL's (`donate.html`, `contact.html`, `thank-you.html`, …) worden in `netlify.toml` doorgestuurd.
 
-### 2. **Warm Orange**
-- **Background**: Orange gradient (#ff6b35 to #f7931e)
-- **Mood**: Energetic, creative, friendly
+## Nog in te vullen
 
-### 3. **Nature Green**
-- **Background**: Green gradient (#48bb78 to #38a169)
-- **Mood**: Fresh, sustainable, growth-oriented
-
-### 4. **Modern Dark**
-- **Background**: Dark gradient (#1a202c to #2d3748)
-- **Mood**: Sophisticated, modern, sleek
-
-**To switch themes**: Change the CSS link in HTML files (see `COLOR-PALETTES.md` for details)
-
-## 🔗 Usage
-
-To use this redesigned version:
-
-1. Navigate to the `redesigned/` folder
-2. Open any HTML file in a web browser
-3. The CSS file is automatically linked and will apply the modern styling
-
-All original content has been preserved while significantly improving the visual design and user experience.
+- Uitleg per onderdeel op de onderdeelpagina's (nu placeholders).
+- Bedragen van de sponsorpakketten (`price` in `src/data/site.ts`; nu "Bedrag in overleg").
